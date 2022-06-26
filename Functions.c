@@ -27,6 +27,38 @@ void freeImage(Image img){
     free(img.rgb);
 }
 
+//prints some info about the file from the headers
+void printInfo(Header header, DIBheader dibheader, Image img){
+    printf("First two characters: %c%c\n", header.name[0], header.name[1]);
+    printf("Size: %d\n", header.size);
+    printf("Header size: %d\nWidth: %d\nHeight: %d\nColor planes: %d\nBits per pixel: %d\nCompression: %d\nImage size: %d\n", dibheader.header_size, dibheader.width, dibheader.height, dibheader.colorplanes, dibheader.bitsperpixel, dibheader.compression, dibheader.image_size);    
+}
+
+Image FillArea(Image img){
+    int x1, y1, x2, y2, red, green, blue;
+    printf("Enter the cordinates of the first point:");
+    scanf("%d", &x1);
+    scanf("%d", &y1);
+    printf("Enter the cordinates of the second point:");
+    scanf("%d", &x2);
+    scanf("%d", &y2);
+    printf("Enter the rgb values of the color to replace the existing one:");
+    scanf("%d", &red);
+    scanf("%d", &green);
+    scanf("%d", &blue);
+
+    for(int a = x1; a <= x2; a++){
+        for(int b = y1; b <= y2; b++){
+            img.rgb[a][b].red = red;
+            img.rgb[a][b].green = green;
+            img.rgb[a][b].blue = blue;
+        }
+    }
+    
+
+    return img;
+}
+
 File openFile(char* filename){
     FILE *fp = fopen("sample_640x426.bmp", "rb");
     File file;
@@ -71,13 +103,10 @@ File openFile(char* filename){
     file.header = header;
     file.dibheader = dibheader;
     file.image = img;
+    FillArea(img);
     fclose(fp);
     freeImage(img);
     return file;
-}
-
-void printInfo(){
-
 }
 
 void writeImage(Header header, DIBheader debheader){
