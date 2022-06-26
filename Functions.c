@@ -49,14 +49,11 @@ Image FillArea(Image img){
     scanf("%d", &rgb.blue);
 
     for(int a = x1; a <= x2; a++){
-        printf("Done!!!");
         for(int b = y1; b <= y2; b++){
-            printf("Done!!!");
-            //img.rgb[a][b] = rgb;
+            img.rgb[a][b] = rgb;
         }
     }
     
-    printf("Done!!!");
     return img;
 }
 
@@ -124,9 +121,11 @@ void writeImage(File file, char* filename){
     fwrite(file.header.name, 2, 1, fp);
     fwrite(&file.header.size, 3*sizeof(int), 1, fp);
     fwrite(&file.dibheader, sizeof(DIBheader), 1, fp);
+
+    fseek(fp, file.header.image_offset, SEEK_SET);
     
-    for (int i = file.image.height-1; i != 0; i--){
-        fwrite(&file.image.rgb[i], sizeof(RGB), file.image.width-1, fp);
+    for (int i = file.image.height-1; i >= 0; i--){
+        fwrite(file.image.rgb[i], file.image.width, sizeof(RGB), fp);
     }
 
     fclose(fp);
