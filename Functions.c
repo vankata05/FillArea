@@ -103,7 +103,6 @@ File openFile(char* filename){
     file.header = header;
     file.dibheader = dibheader;
     file.image = img;
-    FillArea(img);
     fclose(fp);
     freeImage(img);
     return file;
