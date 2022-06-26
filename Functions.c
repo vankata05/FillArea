@@ -5,30 +5,31 @@
 
 //reads the rgb values of all the pixels in the image
 Image readImage(FILE *fp, int height, int width, int image_offset){
-    Image pic;
+    Image img;
     fseek(fp, image_offset, SEEK_SET);//SEEK_SET moves file pointer position to the beginning of the file.
-    pic.rgb = (RGB**) malloc(height*sizeof(void*));//using sizeof(void*) cuz this can point to objects of any type
-    pic.height = height;
-    pic.width = width;
+    img.rgb = (RGB**) malloc(height*sizeof(void*));//using sizeof(void*) cuz this can point to objects of any type
+    img.height = height;
+    img.width = width;
 
     for (int i = height-1; i != 0; i--){//going backwards cuz image info starts from bottom to top
-        pic.rgb[i] = (RGB*) malloc(width*sizeof(RGB));
-        fread(pic.rgb[i], width, sizeof(RGB), fp);
+        img.rgb[i] = (RGB*) malloc(width*sizeof(RGB));
+        fread(img.rgb[i], width, sizeof(RGB), fp);
     }
     
-    return pic;
+    return img;
 }
 
 //frees the dynamicly allocated memory
-void freeImage(Image pic){
-    for (int i = pic.height-1; i != 0; i--){
-        free(pic.rgb[i]);
+void freeImage(Image img){
+    for (int i = img.height-1; i != 0; i--){
+        free(img.rgb[i]);
     }
-    free(pic.rgb);
+    free(img.rgb);
 }
 
 File openFile(char* filename){
     FILE *fp = fopen("sample_640x426.bmp", "rb");
+    File file;
     DIBheader dibheader;
     Header header;
     Image img;
@@ -67,11 +68,16 @@ File openFile(char* filename){
     printf("Header size: %d\nWidth: %d\nHeight: %d\nColor planes: %d\nBits per pixel: %d\nCompression: %d\nImage size: %d\n", dibheader.header_size, dibheader.width, dibheader.height, dibheader.colorplanes, dibheader.bitsperpixel, dibheader.compression, dibheader.image_size);    
     printf("%d:%d:%d", img.rgb[1][1].red, img.rgb[1][1].green, img.rgb[1][1].blue);
     //*/
-
+    file.header = header;
+    file.dibheader = dibheader;
+    file.image = img;
     fclose(fp);
     freeImage(img);
-    File file;
     return file;
+}
+
+void printInfo(){
+
 }
 
 void writeImage(Header header, DIBheader debheader){
