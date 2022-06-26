@@ -35,7 +35,8 @@ void printInfo(Header header, DIBheader dibheader, Image img){
 }
 
 Image FillArea(Image img){
-    int x1, y1, x2, y2, red, green, blue;
+    RGB rgb;
+    int x1, y1, x2, y2;
     printf("Enter the cordinates of the first point:");
     scanf("%d", &x1);
     scanf("%d", &y1);
@@ -43,34 +44,36 @@ Image FillArea(Image img){
     scanf("%d", &x2);
     scanf("%d", &y2);
     printf("Enter the rgb values of the color to replace the existing one:");
-    scanf("%d", &red);
-    scanf("%d", &green);
-    scanf("%d", &blue);
+    scanf("%d", &rgb.red);
+    scanf("%d", &rgb.green);
+    scanf("%d", &rgb.blue);
 
     for(int a = x1; a <= x2; a++){
+        printf("Done!!!");
         for(int b = y1; b <= y2; b++){
-            img.rgb[a][b].red = red;
-            img.rgb[a][b].green = green;
-            img.rgb[a][b].blue = blue;
+            printf("Done!!!");
+            //img.rgb[a][b] = rgb;
         }
     }
     
-
+    printf("Done!!!");
     return img;
 }
 
+
+
 File openFile(char* filename){
     FILE *fp = fopen("sample_640x426.bmp", "rb");
-    File file;
+    File file;/*
     DIBheader dibheader;
     Header header;
-    Image img;
+    Image img;*/
 
-    fread(header.name, 2, 1, fp);
-    fread(&header.size, 3*sizeof(int), 1, fp);
-    fread(&dibheader, sizeof(DIBheader), 1, fp);
+    fread(file.header.name, 2, 1, fp);
+    fread(&file.header.size, 3*sizeof(int), 1, fp);
+    fread(&file.dibheader, sizeof(DIBheader), 1, fp);
     //fread(&header, sizeof(header), 1, fp);//cuz we cant use fscanf in a binary file
-    img = readImage(fp, dibheader.height, dibheader.width, header.image_offset);
+    file.image = readImage(fp, file.dibheader.height, file.dibheader.width, file.header.image_offset);
 
     //check if the file is opened correctly
     if(fp == NULL){
@@ -79,16 +82,16 @@ File openFile(char* filename){
     }
 
     //checks if the file is the right type, more info in wiki
-    if (header.name[0] != 'B' && header.name[2] != 'M'){
+    if (file.header.name[0] != 'B' && file.header.name[2] != 'M'){
         fclose(fp);
         printf("BMP type diferent from BM!!!\n");
-        printf("%s", header.name);
-        printf("%d", strlen(header.name));
+        printf("%s", file.header.name);
+        printf("%d", strlen(file.header.name));
         exit(0);
     }
 
     //checks if the file is compressed
-    if (dibheader.compression != 0){
+    if (file.dibheader.compression != 0){
         fclose(fp);
         printf("File is compressed!!!");
         exit(0);
@@ -100,14 +103,31 @@ File openFile(char* filename){
     printf("Header size: %d\nWidth: %d\nHeight: %d\nColor planes: %d\nBits per pixel: %d\nCompression: %d\nImage size: %d\n", dibheader.header_size, dibheader.width, dibheader.height, dibheader.colorplanes, dibheader.bitsperpixel, dibheader.compression, dibheader.image_size);    
     printf("%d:%d:%d", img.rgb[1][1].red, img.rgb[1][1].green, img.rgb[1][1].blue);
     //*/
-    file.header = header;
-    file.dibheader = dibheader;
-    file.image = img;
+    //printf("%d:%d:%d", img.rgb[1][1].red, img.rgb[1][1].green, img.rgb[1][1].blue);
+    //file.header = header;
+    //file.dibheader = dibheader;
+    //file.image = img;
     fclose(fp);
-    freeImage(img);
+    //freeImage(file.image);
     return file;
 }
 
-void writeImage(Header header, DIBheader debheader){
+void writeImage(File file, char* filename){
+    filename = strcat(filename, ".bmp");
+    FILE *fp = fopen(filename, "w");
 
+    if(fp == NULL){
+        printf("Error creating file!!!");
+        exit(0);
+    }
+
+    fwrite(file.header.name, 2, 1, fp);
+    fwrite(&file.header.size, 3*sizeof(int), 1, fp);
+    fwrite(&file.dibheader, sizeof(DIBheader), 1, fp);
+    
+    for (int i = file.image.height-1; i != 0; i--){
+        fwrite(&file.image.rgb[i], sizeof(RGB), file.image.width-1, fp);
+    }
+
+    fclose(fp);
 }

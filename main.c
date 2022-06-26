@@ -12,7 +12,7 @@ int main(){
     printf("Please enter file name:");
     scanf("%s", &filename);
     File file = openFile(filename);
-
+    //printf("%d:%d:%d", file.image.rgb[1]->red, file.image.rgb[1]->green, file.image.rgb[1]->blue);
     start:
     system("cls");
     printf("1.FillArea\n2.GetFileInfo\n3.Save & Exit\n");
@@ -33,13 +33,16 @@ int main(){
         break;
 
     case 3:
-        //writeImage();
+        printf("Enter the name of the new file:");
+        char newfilename[32];
+        scanf("%s", &newfilename);
+        writeImage(file, newfilename);
         break;
     
     default:
         goto start;
         break;
     }
-
+    freeImage(file.image);
     return 0;
 }

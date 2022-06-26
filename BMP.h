@@ -16,6 +16,7 @@ typedef struct DIBheader {
     unsigned short int bitsperpixel;
     unsigned int compression;//we need it to be zero in order to hot have compression
     unsigned int image_size;
+    unsigned int temp[4];//used when writing to file
 } DIBheader;
 
 typedef struct RGB {
