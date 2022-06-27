@@ -37,8 +37,8 @@ void printInfo(Header header, DIBheader dibheader, Image img){
 }
 
 Image FillArea(Image img){
-    RGB rgb;
     int x1, y1, x2, y2;
+    int red, green, blue;
     printf("Enter the cordinates of the first point:");
     scanf("%d", &x1);
     scanf("%d", &y1);
@@ -46,16 +46,31 @@ Image FillArea(Image img){
     scanf("%d", &x2);
     scanf("%d", &y2);
     printf("Enter the rgb values of the color to replace the existing one:");
-    scanf("%c", &rgb.red);
-    scanf("%c", &rgb.green);
-    scanf("%c", &rgb.blue);
+    scanf("%d", &red);
+    scanf("%d", &green);
+    scanf("%d", &blue);
+    
+    if(x1 > x2){
+    	int temp = x2;
+    	x2 = x1;
+    	x1 = temp;
+    }
+    if(y1 > y2){
+    	int temp = y2;
+    	y2 = y1;
+    	y1 = temp;
+    }
 
     for(int a = x1; a <= x2; a++){
         for(int b = y1; b <= y2; b++){
-            img.rgb[a][b] = rgb;
+            //img.rgb[a][b] = rgb;
+            img.rgb[a][b].red = red;
+            img.rgb[a][b].green = green;
+            img.rgb[a][b].blue = blue;
+            printf("%c:%c:%c\n", red, green, blue);
+            printf("%c:%c:%c\n", img.rgb[a][b].red, img.rgb[a][b].green, img.rgb[a][b].blue);
         }
     }
-    
     return img;
 }
 
