@@ -7,13 +7,15 @@
 Image readImage(FILE *fp, int height, int width, int image_offset){
     Image img;
     fseek(fp, image_offset, SEEK_SET);//SEEK_SET moves file pointer position to the beginning of the file.
-    img.rgb = (RGB**) malloc(height*sizeof(void*));//using sizeof(void*) cuz this can point to objects of any type
+    img.rgb = (RGB**)malloc(height*sizeof(RGB*));//using sizeof(void*) cuz this can point to objects of any type
     img.height = height;
     img.width = width;
 
-    for (int i = height-1; i != 0; i--){//going backwards cuz image info starts from bottom to top
-        img.rgb[i] = (RGB*) malloc(width*sizeof(RGB));
-        fread(img.rgb[i], width, sizeof(RGB), fp);
+    for(int i = height - 1; i >= 0; i--){		//going backwards cuz image info starts from bottom to top
+        img.rgb[i] = (RGB*)malloc(width*sizeof(RGB));
+		//for(int n = 0; n < width; i++)
+		    //fread(&img.rgb[i][n], sizeof(unsigned char), 1, fp);
+	    fread(img.rgb[i], sizeof(RGB), width, fp);
     }
     
     return img;
@@ -44,9 +46,9 @@ Image FillArea(Image img){
     scanf("%d", &x2);
     scanf("%d", &y2);
     printf("Enter the rgb values of the color to replace the existing one:");
-    scanf("%d", &rgb.red);
-    scanf("%d", &rgb.green);
-    scanf("%d", &rgb.blue);
+    scanf("%c", &rgb.red);
+    scanf("%c", &rgb.green);
+    scanf("%c", &rgb.blue);
 
     for(int a = x1; a <= x2; a++){
         for(int b = y1; b <= y2; b++){
@@ -61,13 +63,10 @@ Image FillArea(Image img){
 
 File openFile(char* filename){
     FILE *fp = fopen("sample_640x426.bmp", "rb");
-    File file;/*
-    DIBheader dibheader;
-    Header header;
-    Image img;*/
+    File file;
 
-    fread(file.header.name, 2, 1, fp);
-    fread(&file.header.size, 3*sizeof(int), 1, fp);
+    fread(file.header.name, sizeof(char), 2, fp);
+    fread(&file.header.size, sizeof(unsigned int), 3, fp);
     fread(&file.dibheader, sizeof(DIBheader), 1, fp);
     //fread(&header, sizeof(header), 1, fp);//cuz we cant use fscanf in a binary file
     file.image = readImage(fp, file.dibheader.height, file.dibheader.width, file.header.image_offset);
@@ -83,7 +82,7 @@ File openFile(char* filename){
         fclose(fp);
         printf("BMP type diferent from BM!!!\n");
         printf("%s", file.header.name);
-        printf("%d", strlen(file.header.name));
+        printf("%d", (int)strlen(file.header.name));
         exit(0);
     }
 
@@ -111,22 +110,27 @@ File openFile(char* filename){
 
 void writeImage(File file, char* filename){
     filename = strcat(filename, ".bmp");
-    FILE *fp = fopen(filename, "w");
+    FILE *fp;
+    fp = fopen(filename, "w");
 
     if(fp == NULL){
         printf("Error creating file!!!");
         exit(0);
     }
 
-    fwrite(file.header.name, 2, 1, fp);
-    fwrite(&file.header.size, 3*sizeof(int), 1, fp);
+    fwrite(file.header.name, sizeof(char), 2, fp);
+    fwrite(&file.header.size, sizeof(unsigned int), 3, fp);
     fwrite(&file.dibheader, sizeof(DIBheader), 1, fp);
-
     fseek(fp, file.header.image_offset, SEEK_SET);
     
-    for (int i = file.image.height-1; i >= 0; i--){
-        fwrite(file.image.rgb[i], file.image.width, sizeof(RGB), fp);
+    for(int y = file.image.height - 1; y >= 0; y--){
+		/*for(int x = 0; x < file.image.width - 1; x++){
+			printf("Pixel x(%d) y(%d): rgb(%d, %d, %d)\n", x, y, file.image.rgb[y][x].red, file.image.rgb[y][x].green, file.image.rgb[y][x].blue);
+			fwrite(&file.image.rgb[y][x].blue, sizeof(unsigned char), file.image.width, fp);
+			fwrite(&file.image.rgb[y][x].green, sizeof(unsigned char), file.image.width, fp);
+			fwrite(&file.image.rgb[y][x].red, sizeof(unsigned char), file.image.width, fp);
+		}*/
+		fwrite(file.image.rgb[y], sizeof(RGB), file.image.width, fp);
     }
-
     fclose(fp);
 }
