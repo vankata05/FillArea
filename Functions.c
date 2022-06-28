@@ -47,6 +47,27 @@ Image FillArea(Image img){
     scanf("%d", &red);
     scanf("%d", &green);
     scanf("%d", &blue);
+
+    if(red < 0 || red >255){
+        printf("Invalid rgb input!!!");
+        getchar();
+        getchar();
+        return img;
+    }
+
+    if(green < 0 || green >255){
+        printf("Invalid rgb input!!!");
+        getchar();
+        getchar();
+        return img;
+    }
+
+    if(blue < 0 || blue >255){
+        printf("Invalid rgb input!!!");
+        getchar();
+        getchar();
+        return img;
+    }
     
     if(x1 > x2){
     	int temp = x2;
