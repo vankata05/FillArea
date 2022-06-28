@@ -11,10 +11,8 @@ Image readImage(FILE *fp, int height, int width, int image_offset){
     img.height = height;
     img.width = width;
 
-    for(int i = height - 1; i >= 0; i--){		//going backwards cuz image info starts from bottom to top
+    for(int i = height - 1; i >= 0; i--){//going backwards cuz image info starts from bottom to top
         img.rgb[i] = (RGB*)malloc(width*sizeof(RGB));
-		//for(int n = 0; n < width; i++)
-		    //fread(&img.rgb[i][n], sizeof(unsigned char), 1, fp);
 	    fread(img.rgb[i], sizeof(RGB), width, fp);
     }
     
@@ -67,8 +65,6 @@ Image FillArea(Image img){
             img.rgb[a][b].red = red;
             img.rgb[a][b].green = green;
             img.rgb[a][b].blue = blue;
-            printf("%c:%c:%c\n", red, green, blue);
-            printf("%c:%c:%c\n", img.rgb[a][b].red, img.rgb[a][b].green, img.rgb[a][b].blue);
         }
     }
     return img;
@@ -108,18 +104,7 @@ File openFile(char* filename){
         exit(0);
     }
 
-    /*
-    printf("First two characters: %c%c\n", header.name[0], header.name[1]);
-    printf("Size: %d\n", header.size);
-    printf("Header size: %d\nWidth: %d\nHeight: %d\nColor planes: %d\nBits per pixel: %d\nCompression: %d\nImage size: %d\n", dibheader.header_size, dibheader.width, dibheader.height, dibheader.colorplanes, dibheader.bitsperpixel, dibheader.compression, dibheader.image_size);    
-    printf("%d:%d:%d", img.rgb[1][1].red, img.rgb[1][1].green, img.rgb[1][1].blue);
-    //*/
-    //printf("%d:%d:%d", img.rgb[1][1].red, img.rgb[1][1].green, img.rgb[1][1].blue);
-    //file.header = header;
-    //file.dibheader = dibheader;
-    //file.image = img;
     fclose(fp);
-    //freeImage(file.image);
     return file;
 }
 
@@ -139,12 +124,6 @@ void writeImage(File file, char* filename){
     fseek(fp, file.header.image_offset, SEEK_SET);
     
     for(int y = file.image.height - 1; y >= 0; y--){
-		/*for(int x = 0; x < file.image.width - 1; x++){
-			printf("Pixel x(%d) y(%d): rgb(%d, %d, %d)\n", x, y, file.image.rgb[y][x].red, file.image.rgb[y][x].green, file.image.rgb[y][x].blue);
-			fwrite(&file.image.rgb[y][x].blue, sizeof(unsigned char), file.image.width, fp);
-			fwrite(&file.image.rgb[y][x].green, sizeof(unsigned char), file.image.width, fp);
-			fwrite(&file.image.rgb[y][x].red, sizeof(unsigned char), file.image.width, fp);
-		}*/
 		fwrite(file.image.rgb[y], sizeof(RGB), file.image.width, fp);
     }
     fclose(fp);
