@@ -9,7 +9,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<stdbool.h>
-// #include"Functions.c"
+#include"Functions.c"
 #include"BMP.h"
 
 void setUp(void) {
