@@ -16,10 +16,10 @@ int main(){
     //printf("%d:%d:%d", file.image.rgb[1]->red, file.image.rgb[1]->green, file.image.rgb[1]->blue);
 
     while(true){
-        system("clear");
+        system("cls");
         printf("1.FillArea\n2.GetFileInfo\n3.Save & Exit\n");
         scanf("%d", &option);
-        system("clear");
+        system("cls");
 
         if(option == 1){
             file.image = FillArea(file.image);
