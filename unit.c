@@ -1,11 +1,4 @@
-//write test for the following functions
-//readImage - reads the rgb values of all the pixels in the image
-//freeImage - frees the dynamicly allocated memory
-//printInfo - prints some info about the file from the headers
-//FillArea - fills the area between two points with a given color
-//openFile - opens the file and checks if it is valid
-//writeImage - writes the image to a file
-#include "./Unity/src/unity.h"
+#include "./Unity/src/unity.c"
 #include<stdio.h>
 #include<stdlib.h>
 #include<stdbool.h>
@@ -44,7 +37,10 @@ void test_printInfo(){
 
 void test_FillArea(){
     File file = openFile("sample_640x426.bmp");
+
+    freopen("test_FillArea_input.txt", "r", stdin);
     file.image = FillArea(file.image);
+    writeImage(file, (char*)("why.bmp"));
     freeImage(file.image);
 }
 
