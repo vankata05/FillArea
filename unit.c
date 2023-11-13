@@ -1,6 +1,7 @@
-#include "./Unity/src/unity.c"
+#include "./Unity/src/unity.h"
 #include<stdio.h>
 #include<stdlib.h>
+#include<time.h>
 #include<stdbool.h>
 #include"Functions.c"
 #include"BMP.h"
@@ -58,16 +59,22 @@ void test_writeImage(){
 }
 
 int main(void){
+    double time = clock();
+
     UNITY_BEGIN();
 
+    // for(int i = 0; i < 100; i++){
     RUN_TEST(test_readImage);
     RUN_TEST(test_freeImage);
     RUN_TEST(test_printInfo);
+    // }
     RUN_TEST(test_FillArea);
     RUN_TEST(test_openFile);
     RUN_TEST(test_writeImage);
 
     UNITY_END();
+
+    printf("Time taken: %f\n", (clock() - time) / (double)CLOCKS_PER_SEC * 1000);
 
     return 0;
 }
