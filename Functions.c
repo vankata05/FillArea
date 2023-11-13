@@ -68,7 +68,10 @@ Image FillArea(Image img){
         getchar();
         return img;
     }
-    
+
+    // Print received input
+    printf("\nUser input:\nStart point: %d, %d\nEnd point: %d, %d\nRGB = (%d, %d, %d)\n", x1, y1, x2, y2, red, green, blue);
+
     if(x1 > x2){
     	int temp = x2;
     	x2 = x1;
